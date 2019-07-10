@@ -132,9 +132,8 @@ def test_common_configuration(tmpdir):
     Args:
         tmpdir (py.path.local): tmpdir pytest fixture
     """
+    from os import chmod
     from accelpy._terraform import Terraform
-    from accelpy._common import call
-    from accelpy.exceptions import RuntimeException
 
     config_dir = tmpdir.join('config').ensure(dir=True)
     source_dir = tmpdir.join('source').ensure(dir=True)
@@ -150,8 +149,25 @@ def test_common_configuration(tmpdir):
 
     # Test: Use user provided SSH private key
     user_ssh_key = str(tmpdir.join('user_key.pem'))
-    call(['ssh-keygen', '-t', 'ecdsa', '-f', user_ssh_key, '-N', ''],
-         pipe_stdout=True)
+    with open(user_ssh_key, 'wb') as key_file:
+        # RSA 1024 key
+        key_file.write(
+            b"-----BEGIN RSA PRIVATE KEY-----\n"
+            b"MIICXQIBAAKBgQC1gOpjs0RIAJm1/t07vSBhFZtD7KX8qFoH2XE+Ry3lbIKNKBpK"
+            b"9EYNdf/MYlekedHcZUz6UXoPBCrEkJmawrkz/L1Vczz/LiaEcKYgzYd3jciQ5/o5"
+            b"6tGfdzAC98+7NtzfXMg8utdW9cqTBUkRTR0UW092eutPJHAYPiIZN3bVuQIDAQAB"
+            b"AoGANGsBxj9sldrOiZgMbodFRaSGzcwXd+tq7N9obBMEd0CqR3fwd/sqDBMrB+zS"
+            b"4OZprFv5KkXDmXibnV8hbWeVMqi0wKCj3KNYgpvya/ReukD+CbDGrnRZs7iFyGQF"
+            b"qKFOPqd7JcXVPDj5PWFPOI8PvFtikxa80Gx35uaxOwAnSt0CQQDj71MGVlDTkmem"
+            b"6kZ/A9F/oa1TgbqYvlovF8oofftAN98c+QSbP2d2cTNUcxgA8Q1lmIPbgEouJXbB"
+            b"Ahs08F4bAkEAy9oK9GvnrDem1pG4wJt/3NVcU3KmsX8jASw9tXGwSac0yV41f+xO"
+            b"y975sy5hFu5YNO84uNIOPKJQB32YCOfIuwJAMrK7w9AVIEoTNgQr8/p0cbATblyP"
+            b"lYPZaVogRAtphCopPTeCN8nNiIG7ShBjiWoUccGPqpYJaeQ5WsrOJGNGewJBAJ5J"
+            b"SIhR4SpQbDPgIt0r4TTQV0hUlirs1XlrqN7i0EfglZRmmpQiIW0cTjdbo/fySnuP"
+            b"5TNdp8BdKFcopo0DrVECQQDMGk2sZikHXPbawNgQdYbyIwl2AznyvsVFxBzIP3u3"
+            b"sdw+GZisEbUY0Uqt+XvCqibcjivRcT7j5Xh6ljTg5ChF"
+            b"\n-----END RSA PRIVATE KEY-----\n")
+    chmod(user_ssh_key, 0o600)
 
     config_dir.remove(rec=1)
     config_dir.ensure(dir=True)
@@ -159,13 +175,6 @@ def test_common_configuration(tmpdir):
 
     terraform = Terraform(config_dir, user_config=source_dir)
     terraform.create_configuration()
-    try:
-        terraform.apply(quiet=True)
-    except RuntimeException as exc:
-        # Sometime, Fails with the test provided key (With OpenSSH 8.0/Fedora30)
-        # Todo: Find exactly what is wrong
-        if 'failed to decode PEM block containing private key' in str(exc):
-            pytest.xfail('Incompatible private Key')
-        raise
+    terraform.apply(quiet=True)
 
     assert terraform.output['host_ssh_private_key'] == str(user_ssh_key)

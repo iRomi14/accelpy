@@ -147,6 +147,14 @@ def test_host(tmpdir):
             assert Application(host._application_yaml).get(
                 'package', 'name', env=provider) == artifact
 
+        # Test: Missing Accelize DRM configuration
+        application = mock_application(
+            source_dir, override={'accelize_drm': {}})
+
+        with pytest.raises(ConfigurationException):
+            Host(application=application, user_config=source_dir,
+                 keep_config=False)
+
     # Restore mocked config dir
     finally:
         accelpy_host.CONFIG_DIR = accelpy_host_config_dir

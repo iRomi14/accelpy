@@ -3,12 +3,13 @@
 import pytest
 
 
-def mock_application(source_dir):
+def mock_application(source_dir, override=None):
     """
     Mock Application
 
     Args:
         source_dir (py.path.local): Source directory.
+        override (dict): Dict with update content.
 
     Returns:
         py.path.local: Application path.
@@ -16,7 +17,8 @@ def mock_application(source_dir):
     from accelpy._common import yaml_write
 
     application = source_dir.join('application.yml')
-    yaml_write({
+
+    content = {
         'application': {
             'name': 'my_app',
             'version': '1.0.0'
@@ -27,8 +29,17 @@ def mock_application(source_dir):
         },
         'fpga': {
             'image': 'image'
+        },
+        'accelize_drm': {
+            'conf': {
+                'drm': {}
+            }
         }
-    }, application)
+    }
+    if override:
+        content.update(override)
+
+    yaml_write(content, application)
 
     return application
 

@@ -10,6 +10,8 @@ apt-get install -y --no-install-recommends \
     ca-certificates \
     gnupg \
     python3 \
-    sudo && \
+    sudo \
+    systemd \
+    && \
 apt-get clean && \
 groupadd -g 1001 fpgauser

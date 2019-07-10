@@ -152,7 +152,37 @@ This section define the DRM service configuration.
   using the Accelize DRM library (See
   `Accelize documentation <https://www.accelize.com/docs>`_). `false` if not
   specified.
-* `conf_path` (string): Path to Accelize DRM `conf.json`.
+* `conf` (dict): Content of Accelize DRM `conf.json` (YAML or JSON formatted).
+
+.. code-block::yaml
+   :caption: Passing the Accelize DRM conf.json: YAML formatted
+
+    accelize_drm:
+      conf:
+        licensing:
+          url: https://master.metering.accelize.com
+        drm:
+          frequency_mhz: 125
+          drm_ctrl_base_addr: 0
+        design:
+          boardType: ISV custom data
+
+.. code-block::yaml
+   :caption: Passing the Accelize DRM conf.json: JSON formatted
+
+    accelize_drm:
+      conf: {
+        "licensing": {
+          "url": "https://master.metering.accelize.com"
+        },
+        "drm": {
+          "frequency_mhz": 125,
+           "drm_ctrl_base_addr": 0,
+        },
+        "design": {
+          "boardType": "ISV custom data"
+        }
+      }
 
 Provider specific override
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

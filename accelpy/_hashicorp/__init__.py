@@ -197,6 +197,7 @@ class Utility:
             last_release['signature_url'] = f"{checksum_url}.sig"
 
             # Cache result
+            makedirs(cls._install_dir(), exist_ok=True)
             json_write(last_release, info_cache)
 
         else:

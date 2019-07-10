@@ -89,8 +89,10 @@ FORMAT = {
                  'enabled, the application must handle the DRM itself using '
                  'the Accelize DRM library.'
         ),
-        'conf_path': dict(
-            desc='Configuration file path.'
+        'conf': dict(
+            desc='Accelize DRM configuration.',
+            value_type=dict,
+            default={},
         ),
     }
 }
@@ -146,7 +148,7 @@ class Application:
             env (str): Environment. None for use default environment value.
 
         Returns:
-            str: value
+            Value
         """
         # Return specific environment value
         try:

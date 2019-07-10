@@ -1,3 +1,4 @@
+---
 sudo: required
 language: python
 services: docker
@@ -9,14 +10,15 @@ python:
 
 install:
     # Python environment
-    - "python -m pip install --upgrade setuptools pip wheel pytest-cov codecov molecule[docker]"
+    - "python -m pip install --upgrade setuptools pip wheel pytest-cov codecov
+       molecule[docker] --pre"
 
     # Installs all package dependencies
     - "python -m pip install -e ."
 
 script:
     # Runs tests
-    - 'py.test -v -m "not require_csp" --cov=accelpy --cov-report=term-missing'
+    - 'pytest -v -m "not require_csp" --cov=accelpy --cov-report=term-missing'
 
 after_success:
     # Sends coverage to codecov.io

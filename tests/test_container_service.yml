@@ -4,7 +4,7 @@ application:
   type: container_service
   version: 1.0.0
 
-firewall_rules: 
+firewall_rules:
   - start_port: 8080
     end_port: 8080
     protocol: tcp
@@ -21,7 +21,13 @@ package:
   type: container_image
 
 accelize_drm:
-  conf_path: /home/fedora/Documents/git/drmlib/tests/utils/conf.json
+  conf:
+    design:
+      boardType: DRM_125
+    licensing:
+      url: https://master.metering.accelize.com
+    drm:
+      frequency_mhz: 125
 
 test:
   shell: curl -sS $(accelpy public_ip):8080

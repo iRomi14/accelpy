@@ -6,6 +6,7 @@
 
 # Build generated files
 docs/_build/
+docs/cli_help.rst
 build/
 dist/
 .eggs/

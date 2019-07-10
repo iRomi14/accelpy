@@ -68,6 +68,8 @@ class Host:
         self._config_dir = join(CONFIG_DIR, name)
         user_parameters_json = join(self._config_dir, 'user_parameters.json')
         self._output_json = join(self._config_dir, 'output.json')
+        self._accelize_drm_conf_json = join(
+            self._config_dir, 'accelize_drm_conf.json')
 
         # Create a new configuration
         config_exists = isdir(self._config_dir)
@@ -259,7 +261,7 @@ class Host:
             key (str): Definition key.
 
         Returns:
-            str: Value
+            Value
         """
         return self._application.get(section, key, env=self._provider)
 
@@ -294,6 +296,20 @@ class Host:
             # Lazy import: May not be used all time
             from accelpy._ansible import Ansible
 
+            # Get Accelize DRM configuration
+            accelize_drm_enable = self._app('accelize_drm', 'use_service')
+            accelize_drm_conf = self._app('accelize_drm', 'conf')
+
+            if accelize_drm_enable and not accelize_drm_conf:
+                # Check configuration presence instead of wait role failure
+                raise ConfigurationException(
+                    'Application definition section "accelize_drm" require '
+                    '"conf" value to be specified if "use_service" is '
+                    'specified.')
+
+            json_write(accelize_drm_conf, self._accelize_drm_conf_json)
+
+            # Set Ansible variables
             variables = dict(
                 fpga_image=self._app('fpga', 'image'),
                 fpga_driver=self._app('fpga', 'driver'),
@@ -304,9 +320,8 @@ class Host:
                 package_name=self._app('package', 'name'),
                 package_version=self._app('package', 'version'),
                 package_repository=self._app('package', 'repository'),
-                accelize_drm_disabled=not self._app(
-                    'accelize_drm', 'use_service'),
-                accelize_drm_conf_src=self._app('accelize_drm', 'conf_path'),
+                accelize_drm_disabled=not accelize_drm_enable,
+                accelize_drm_conf_src=self._accelize_drm_conf_json,
                 accelize_drm_cred_src=join(self._config_dir, 'cred.json')
             )
 

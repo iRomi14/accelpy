@@ -8,11 +8,14 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
     os.environ['MOLECULE_INVENTORY_FILE']).get_hosts()
 
 
-def test_service_running(host):
+def test_configuration_ready(host):
     """
-    Test if service is running.
+    Test if service configuration properly generated.
     """
-    # Check service
-    service = host.service('accelize_container')
-    assert service.is_running
-    assert service.is_enabled
+    conf = host.file('/etc/systemd/system/accelize_container.service')
+    assert conf.exists
+    assert conf.contains('--env FPGA_SLOTS=0')
+    assert conf.contains('-p 8080:8080/tcp')
+    assert (conf.contains('--privileged') or
+            conf.contains('--device') or
+            conf.contains('--mount'))

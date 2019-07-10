@@ -1,7 +1,8 @@
 # coding=utf-8
 """Global configuration"""
 from json import dump as _json_dump, load as _json_load
-from os import fsdecode as _fsdecode, symlink as _symlink, chmod as _chmod
+from os import (fsdecode as _fsdecode, symlink as _symlink, chmod as _chmod,
+                makedirs as _makesdirs)
 from os.path import (
     expanduser as _expanduser, isdir as _isdir, realpath as _realpath)
 from collections.abc import Mapping as _Mapping
@@ -19,6 +20,9 @@ from accelpy.exceptions import RuntimeException as _RuntimeException
 
 #: User configuration directory
 HOME_DIR = _expanduser('~/.accelize')
+
+# Ensure directory exists and have restricted access rights
+_makesdirs(HOME_DIR, exist_ok=True)
 _chmod(HOME_DIR, 0o700)
 
 
