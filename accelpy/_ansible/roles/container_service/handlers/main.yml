@@ -1,0 +1,4 @@
+---
+- name: Save iptables
+  command: iptables-save
+  become: true

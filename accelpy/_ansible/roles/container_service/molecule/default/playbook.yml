@@ -1,0 +1,14 @@
+---
+- name: Converge
+  hosts: all
+  roles:
+    - role: container_service
+  vars:
+    package_name: accelize/base
+    package_version: test
+    firewall_rules:
+      - start_port: 8080
+        end_port: 8080
+        protocol: tcp
+        direction: ingress
+    fpga_slots: [0]

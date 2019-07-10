@@ -1,0 +1,7 @@
+# Coverage.py configuration (Used by pytest-cov)
+
+[run]
+omit=
+    docs/conf.py
+    setup.py
+branch = True

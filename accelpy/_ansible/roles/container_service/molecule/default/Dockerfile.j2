@@ -1,0 +1,15 @@
+{% if item.registry is defined %}
+FROM {{ item.registry.url }}/{{ item.image }}
+{% else %}
+FROM {{ item.image }}
+{% endif %}
+
+RUN  apt-get update && \
+apt-get install -y --no-install-recommends \
+    bash \
+    ca-certificates \
+    gnupg \
+    python3 \
+    sudo && \
+apt-get clean && \
+groupadd -g 1001 fpgauser

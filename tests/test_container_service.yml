@@ -1,0 +1,27 @@
+---
+application:
+  name: container_service_test
+  type: container_service
+  version: 1.0.0
+
+firewall_rules: 
+  - start_port: 8080
+    end_port: 8080
+    protocol: tcp
+    direction: ingress
+
+fpga:
+  aws,eu-west-1:
+    image: agfi-04d518960fd114e28
+  count: 1
+
+package:
+  name: accelize/base
+  version: test
+  type: container_image
+
+accelize_drm:
+  conf_path: /home/fedora/Documents/git/drmlib/tests/utils/conf.json
+
+test:
+  shell: curl -sS $(accelpy public_ip):8080

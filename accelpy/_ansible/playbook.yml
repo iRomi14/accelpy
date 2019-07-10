@@ -1,0 +1,25 @@
+# Playbook template
+- hosts: all
+  become: true
+  pre_tasks:
+
+    - name: Ensure APT packages are up to date
+      apt:
+        update_cache: true
+        upgrade: true
+      retries: 10
+      delay: 1
+
+    - name: Ensure minimal dependencies are installed
+      apt:
+        name: "{{ packages }}"
+        state: present
+        install_recommends: true
+        update_cache: true
+      vars:
+        packages:
+        - apt-transport-https
+        - gnupg
+        - software-properties-common
+      retries: 10
+      delay: 1

@@ -1,0 +1,35 @@
+{
+  "variables": {
+    "aws_access_key": "",
+    "aws_secret_key": "",
+    "aws_instance_type": "t3.micro"
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "access_key": "{{user `aws_access_key`}}",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "region": "{{user `provider_param_1`}}",
+      "ami_name": "{{user `image_name`}}",
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "name": "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*",
+          "root-device-type": "ebs"
+        },
+        "owners": [
+          "099720109477"
+        ],
+        "most_recent": true
+      },
+      "ssh_username": "ubuntu",
+      "instance_type": "{{user `aws_instance_type`}}",
+      "shutdown_behavior": "terminate",
+      "spot_price": "auto",
+      "spot_price_auto_product": "Linux/UNIX",
+      "run_tags": {
+        "Name": "packer_{{user `image_name`}}"
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+---
+# AWS CodeBuild
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - python3 -m pip install pytest
+      - python3 -m pip install -e .
+
+  build:
+    commands:
+      - pytest -v -m require_csp

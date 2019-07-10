@@ -1,0 +1,23 @@
+sudo: required
+language: python
+services: docker
+dist: xenial
+
+python:
+    - "3.6"
+    - "3.7"
+
+install:
+    # Python environment
+    - "python -m pip install --upgrade setuptools pip wheel pytest-cov codecov molecule[docker]"
+
+    # Installs all package dependencies
+    - "python -m pip install -e ."
+
+script:
+    # Runs tests
+    - 'py.test -v -m "not require_csp" --cov=accelpy --cov-report=term-missing'
+
+after_success:
+    # Sends coverage to codecov.io
+    - "codecov"
