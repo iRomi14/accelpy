@@ -4,8 +4,8 @@
   roles:
     - role: container_service
   vars:
-    package_name: accelize/base
-    package_version: test
+    package_name: accelize/accelpy-ci
+    package_version: container_service
     firewall_rules:
       - start_port: 8080
         end_port: 8080

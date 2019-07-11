@@ -16,9 +16,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-__version__ = '1.0.0-beta.1'
+__version__ = '1.0.0-beta.2'
 __copyright__ = "Copyright 2018 Accelize"
 __licence__ = "Apache 2.0"
+
+from sys import version_info as _py
+if (_py[0] < 3) or (_py[0] == 3 and _py[1] < 6):
+    from sys import version
+    raise ImportError(
+        'Accelpy require Python 3.6 or more (Currently %s)' % version)
+del _py
 
 from accelpy._application import lint
 from accelpy._host import Host, iter_hosts

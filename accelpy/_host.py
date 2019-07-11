@@ -1,9 +1,9 @@
 """Manage hosts life-cycle"""
 from os import chmod, fsdecode, makedirs, scandir, symlink
-from os.path import isabs, isdir, join, realpath
+from os.path import isabs, isdir, isfile, join, realpath
 
 from accelpy._application import Application
-from accelpy._common import HOME_DIR, json_read, json_write
+from accelpy._common import HOME_DIR, json_read, json_write, get_sources_dirs
 from accelpy.exceptions import ConfigurationException
 
 CONFIG_DIR = join(HOME_DIR, 'hosts')
@@ -70,10 +70,15 @@ class Host:
         self._output_json = join(self._config_dir, 'output.json')
         self._accelize_drm_conf_json = join(
             self._config_dir, 'accelize_drm_conf.json')
+        self._accelize_drm_cred_json = join(self._config_dir, 'cred.json')
 
         # Create a new configuration
         config_exists = isdir(self._config_dir)
         if not config_exists and application:
+
+            # Ensure config is cleaned on creation error
+            self._keep_config = False
+
             # Create target configuration directory and remove access to other
             # users since Terraform state files may content sensible data and
             # directory may contain SSH private key
@@ -91,6 +96,11 @@ class Host:
 
             # Get application and add it as link with configuration
             self._application_yaml = realpath(fsdecode(application))
+
+            # Check Accelize Requirements
+            self._init_accelize_drm()
+
+            # Add link to configuration
             symlink(self._application_yaml, join(
                 self._config_dir, 'application.yml'))
 
@@ -98,6 +108,8 @@ class Host:
             self._terraform.create_configuration()
             self._ansible.create_configuration()
             self._packer.create_configuration()
+
+            self._keep_config = keep_config
 
         # Load an existing configuration
         elif config_exists:
@@ -116,6 +128,36 @@ class Host:
             raise ConfigurationException(
                 'Require at least an existing host name, or an '
                 'application to create a new host.')
+
+    def _init_accelize_drm(self):
+        """Initialize Accelize DRM requirements"""
+
+        # Create configuration file from application
+        accelize_drm_enable = self._app('accelize_drm', 'use_service')
+        accelize_drm_conf = self._app('accelize_drm', 'conf')
+
+        if accelize_drm_enable and not accelize_drm_conf:
+            raise ConfigurationException(
+                'Application definition section "accelize_drm" require '
+                '"conf" value to be specified if "use_service" is '
+                'specified.')
+
+        json_write(accelize_drm_conf, self._accelize_drm_conf_json)
+
+        # Get credentials file from user configuration
+        for src in get_sources_dirs(self._user_config):
+
+            cred_path = join(src, 'cred.json')
+
+            if isfile(cred_path):
+                symlink(cred_path, self._accelize_drm_cred_json)
+                break
+            else:
+                raise ConfigurationException(
+                    'No Accelize DRM credential found. Please, make sure to '
+                    f'have your "cred.json" file installed in "{HOME_DIR}", '
+                    f'current directory or path specified with the '
+                    f'"user_config" argument.')
 
     def __enter__(self):
         return self
@@ -296,19 +338,6 @@ class Host:
             # Lazy import: May not be used all time
             from accelpy._ansible import Ansible
 
-            # Get Accelize DRM configuration
-            accelize_drm_enable = self._app('accelize_drm', 'use_service')
-            accelize_drm_conf = self._app('accelize_drm', 'conf')
-
-            if accelize_drm_enable and not accelize_drm_conf:
-                # Check configuration presence instead of wait role failure
-                raise ConfigurationException(
-                    'Application definition section "accelize_drm" require '
-                    '"conf" value to be specified if "use_service" is '
-                    'specified.')
-
-            json_write(accelize_drm_conf, self._accelize_drm_conf_json)
-
             # Set Ansible variables
             variables = dict(
                 fpga_image=self._app('fpga', 'image'),
@@ -320,9 +349,10 @@ class Host:
                 package_name=self._app('package', 'name'),
                 package_version=self._app('package', 'version'),
                 package_repository=self._app('package', 'repository'),
-                accelize_drm_disabled=not accelize_drm_enable,
+                accelize_drm_disabled=not self._app('accelize_drm',
+                                                    'use_service'),
                 accelize_drm_conf_src=self._accelize_drm_conf_json,
-                accelize_drm_cred_src=join(self._config_dir, 'cred.json')
+                accelize_drm_cred_src=self._accelize_drm_cred_json
             )
 
             self._ansible_config = Ansible(

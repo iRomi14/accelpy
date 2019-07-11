@@ -51,8 +51,8 @@ Filenames are also filtered using their names, only files that match following
 pasterns are imported to the configuration.
 
 With the filter name equal to `common`, the provider name or the application
-type. Files that starts with the filter name after being split by `.` are
-kept in the configuration.
+type. Files that starts with the filter name after being split by `.` are kept
+in the configuration.
 
 Tool specific configuration handling
 ------------------------------------

@@ -21,10 +21,9 @@ The installation is performed using Pip:
 
 Ansible and all required Python packages are installed automatically by Pip.
 
-HashiCorp utilities (Terraform & Packer) are managed automatically by
-accelpy. It ensures that the version used is up to date,
-downloads and installs the tool if necessary after checking its signature and
-integrity.
+HashiCorp utilities (Terraform & Packer) are managed automatically by accelpy.
+It ensures that the version used is up to date, downloads and installs the tool
+if necessary after checking its signature and integrity.
 
 Application definition
 ----------------------
@@ -155,24 +154,13 @@ system software are up to date and keep them secure.
 SSH connection
 ~~~~~~~~~~~~~~
 
-It is possible to connect application host using SSH. To do this the utility
-allow user to retrieve all required information and can add/remove the required
-SSH key to the SSH agent.
+It is possible to connect application host using SSH using information returned
+by the utility.
 
 Example with OpenSSH:
 
 .. code-block:: bash
 
-    # Add the SSH key to the SSH agent
-    accelpy ssh_agent_add
-
-    # Connect to SSH using host information
-    ssh -Yt $(accelpy ssh_user)@$(accelpy public_ip)
-
-    # Remove the SSH key from the agent
-    accelpy ssh_agent_remove
-
-    # It is also possible to connect without using the SSH agent
     ssh -Yt -i $(accelpy ssh_private_key) $(accelpy ssh_user)@$(accelpy public_ip)
 
 .. note:: By default, the utility generate a new SSH key for each configuration,

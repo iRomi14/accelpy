@@ -29,13 +29,13 @@ Provision in the multi-Cloud
     `Packer support <https://www.packer.io/docs/builders/index.html>`_.
 
 Provision an immutable infrastructure
-    Once the application is ready, *accelpy* allow creating an image
-    of it for all required provider and then use this image to deploy an
-    immutable infrastructure.
+    Once the application is ready, *accelpy* allow creating an image of it for
+    all required provider and then use this image to deploy an immutable
+    infrastructure.
 
 Don't care about the FPGA requirements
-    *accelpy* configure the host with required FPGA drivers and ensure
-    the FPGA bitstream is loaded before starting the application.
+    *accelpy* configure the host with required FPGA drivers and ensure the FPGA
+    bitstream is loaded before starting the application.
 
 Configure and scale as you need
     *accelpy* provides default infrastructure configuration that can be
@@ -45,30 +45,31 @@ Configure and scale as you need
     This allows generating the scalable infrastructure that fit your needs.
 
 Protect your FPGA application
-    *accelpy* is integrated into the Accelize solution and provides all
-    the tools to provision application protected by the Accelize DRM.
+    *accelpy* is integrated into the
+    `Accelize solution <https://www.accelize.com/>`_ and provides all
+    the tools to provision application protected by the
+    `Accelize DRM <https://www.accelize.com/docs>`_.
 
 Containerize your application
-    *accelpy* allow to package the software part of your application as
-    a *Docker* container image and a single YAML configuration file.
+    *accelpy* allow to package the software part of your application as a
+    *Docker* container image and a single YAML configuration file.
 
 Run without configuration
     *accelpy* provides default ready to use configuration to immediately
     provision a single host infrastructure on a subset of providers.
 
 Use and integrate it easily
-    *accelpy* can be operated using the command line interface
-    interface or the Python API.
+    *accelpy* can be operated using the command line interface or the Python
+    API.
 
 Deploy application on secure host that follow DevOps good practices
-    The default configurations provided with *accelpy* are done with
-    DevOps good practices and enhanced security in mind. Relevant
+    The default configurations provided with *accelpy* are done with DevOps
+    good practices and enhanced security in mind. Relevant
     `DevSec hardening baselines <https://dev-sec.io/>`_ are applied by default.
 
 Be free to use it as you want
-    *accelpy* generate a configuration for your application that can
-    then be used without the utility itself as part of your own provisioning
-    project.
+    *accelpy* generate a configuration for your application that can then be
+    used without the utility itself as part of your own provisioning project.
 
     The entire project is open source and based on open source tools.
 

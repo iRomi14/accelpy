@@ -6,6 +6,16 @@ The application is a container infinitely running in background.
 The application manager is a systemd service that run the container once on
 boot.
 
+Prerequisites
+-------------
+
+To create this kind of application, you need to create a Docker container image
+and push it on a registry like Docker-Hub. Following links from Docker
+documentation can help to start with container images:
+
+* `Develop with Docker <https://docs.docker.com/develop>`_
+* `Repositories <https://docs.docker.com/docker-hub/repos>`_
+
 Container configuration
 -----------------------
 

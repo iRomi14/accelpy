@@ -44,7 +44,8 @@ PACKAGE_INFO = dict(
     python_requires='>=3.6',
     install_requires=[
         'requests>=2.20.0',
-        'ansible>=2.8'
+        'ansible>=2.8',
+        'awscli>=1.16'  # To remove once Terraform support spot instance tagging
     ],
     setup_requires=['setuptools'],
     tests_require=['pytest', 'molecule[docker]'],

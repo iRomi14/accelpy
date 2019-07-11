@@ -1,8 +1,8 @@
 # coding=utf-8
 """Ansible configuration"""
 from os import makedirs, fsdecode, scandir, listdir
-from os.path import join, realpath, dirname
-from sys import prefix, executable
+from os.path import join, realpath, dirname, splitext, basename
+from sys import executable
 
 from accelpy._common import (
     yaml_read, yaml_write, call, get_sources_dirs, symlink, get_sources_filters)
@@ -19,7 +19,7 @@ class Ansible:
         variables (dict): Ansible playbook variables.
         user_config (path-like object): User configuration directory.
     """
-    _EXECUTABLE = join(realpath(prefix), 'bin/ansible')
+    _ANSIBLE_EXECUTABLE = None
 
     def __init__(self, config_dir,
                  provider=None, application_type=None, variables=None,
@@ -118,6 +118,40 @@ class Ansible:
 
         yaml_write(playbook, self._playbook)
 
+    @classmethod
+    def _executable(cls):
+        """
+        Find and return Ansible executable path from this Python environment.
+
+        This ensure to execute a compatible version with the expected Python
+        version.
+
+        returns:
+            str: path
+        """
+        if cls._ANSIBLE_EXECUTABLE is None:
+            from ansible import __path__
+            site_packages = dirname(__path__[0])
+            record_path = ''
+
+            with scandir(site_packages) as entries:
+                for entry in entries:
+                    name = entry.name
+                    if name.startswith(
+                            'ansible-') and splitext(name)[1] == '.dist-info':
+                        record_path = join(entry.path, 'RECORD')
+                        break
+
+            with open(record_path, 'rt') as record:
+                for line in record:
+                    path = line.split(',', 1)[0]
+                    if basename(path) in ('ansible', 'ansible.exe'):
+                        break
+
+            cls._ANSIBLE_EXECUTABLE = realpath(join(site_packages, path))
+
+        return cls._ANSIBLE_EXECUTABLE
+
     def _ansible(self, *args, utility=None, check=True, pipe_stdout=False,
                  **run_kwargs):
         """
@@ -134,10 +168,10 @@ class Ansible:
         Returns:
             subprocess.CompletedProcess: Ansible call result.
         """
-        return call([executable, f"{self._EXECUTABLE}-{utility}" if utility else
-                     self._EXECUTABLE] + list(args),
-                    cwd=self._config_dir, check=check, pipe_stdout=pipe_stdout,
-                    **run_kwargs)
+        return call(
+            [executable, f"{self._executable()}-{utility}" if utility else
+             self._executable] + list(args), cwd=self._config_dir, check=check,
+            pipe_stdout=pipe_stdout, **run_kwargs)
 
     def lint(self):
         """
@@ -167,4 +201,4 @@ class Ansible:
         Returns:
             str: command
         """
-        return f'{cls._EXECUTABLE}-playbook'
+        return f'{cls._executable()}-playbook'

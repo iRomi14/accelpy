@@ -187,6 +187,7 @@ resource "aws_spot_instance_request" "instance_spot" {
   wait_for_fulfillment = true
   provisioner "local-exec" {
     # "tags" apply to spot instance request and needs to be applied to instance
+    # https://github.com/terraform-providers/terraform-provider-aws/issues/32
     command = "aws ec2 create-tags --resources ${self.spot_instance_id} --tags Key=Name,Value=${local.name}"
   }
 
