@@ -6,7 +6,7 @@
 [![Documentation Status](https://readthedocs.org/projects/accelpy/badge/?version=latest)](https://accelpy.readthedocs.io/en/latest/?badge=latest)
 [![PyPI](https://img.shields.io/pypi/v/accelpy.svg)](https://pypi.org/project/accelpy)
 
-# Overview :eyes:
+# :eyes: Overview
 
 **AccelPy** is an FPGA accelerated applications provisioning utility.
 
@@ -17,7 +17,7 @@ The utility is based on the powerful industry approved tools [Ansible](https://w
 of cloud of on-prem providers and support an to be very configurable.
 
 
-# Features :scroll:
+# :scroll: Features
 
 * Provision in the multi-Cloud
 * Provision an immutable infrastructure
@@ -32,12 +32,12 @@ of cloud of on-prem providers and support an to be very configurable.
 
 Get more information on our [documentation](https://accelpy.readthedocs.io)!
 
-## Prerequisites :heavy_exclamation_mark:
+## :heavy_exclamation_mark: Prerequisites
 
 * Linux (but may also work on any other Unix based OS).
 * Python 3.6 or greater
 
-## Installation :vhs:
+## :vhs: Installation
 
 The installation is performed using Pip :
 ```
@@ -45,6 +45,6 @@ pip3 install accelpy
 ```
 Ansible and all required Python packages are installed automatically by Pip.
 
-## License :registered:
+## :registered: License
 
 Please consult [license](LICENSE)
