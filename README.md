@@ -8,7 +8,7 @@
 
 # Overview :eyes:
 
-*AccelPy* is an FPGA accelerated applications provisioning utility.
+**AccelPy** is an FPGA accelerated applications provisioning utility.
 
 The aim of this utility is to provision the cloud or on-prem infrastructure and
 configures it to run the application.
