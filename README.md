@@ -30,7 +30,7 @@ of cloud of on-prem providers and support an to be very configurable.
 * Deploy application on secure host that follow DevOps good practices
 * Use it as you want
 
-Get more detailed information on our [documentation](https://accelpy.readthedocs.io)!
+Get more information on our [documentation](https://accelpy.readthedocs.io)!
 
 ## Prerequisites :heavy_exclamation_mark:
 
@@ -40,7 +40,9 @@ Get more detailed information on our [documentation](https://accelpy.readthedocs
 ## Installation :vhs:
 
 The installation is performed using Pip :
-`pip3 install accelpy`
+```
+pip3 install accelpy
+```
 Ansible and all required Python packages are installed automatically by Pip.
 
 ## License :registered:
